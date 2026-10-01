@@ -256,7 +256,7 @@ function darbe(f = 300, d = .12, v = .25, gurultu = .6){   // topa vurma / nal s
 }
 $('#sifirla').onclick = () => {
   if (!confirm('Yolculuk baştan başlasın mı?')) return;
-  try { localStorage.removeItem('aysun_adim'); } catch (e) {}
+  try { localStorage.removeItem('aysun_adim'); localStorage.removeItem('aysun_zaman'); } catch (e) {}
   location.href = location.pathname + '?sifirla';
 };
 $('#ses').onclick = () => { sesAcik = !sesAcik; $('#ses').textContent = sesAcik ? '🔊' : '🔇'; if (!sesAcik) KEMENCE.dur(); };
@@ -283,9 +283,14 @@ function konus(av, kim, rol, met){
 
 /* ===================== DURUM ===================== */
 let adim = 0;
-try{ adim = Math.min(DURAKLAR.length, parseInt(localStorage.getItem('aysun_adim') || '0', 10) || 0); }catch(e){}
+try{
+  // 30 dk'dan eski kayıt sıfırdan başlar
+  const zaman = parseInt(localStorage.getItem('aysun_zaman') || '0', 10) || 0;
+  if (Date.now() - zaman > 30 * 60 * 1000) adim = 0;
+  else adim = Math.min(DURAKLAR.length, parseInt(localStorage.getItem('aysun_adim') || '0', 10) || 0);
+}catch(e){}
 if (/[?&]sifirla/.test(location.search)) adim = 0;
-function adimKaydet(){ try{ localStorage.setItem('aysun_adim', String(adim)); }catch(e){} }
+function adimKaydet(){ try{ localStorage.setItem('aysun_adim', String(adim)); localStorage.setItem('aysun_zaman', String(Date.now())); }catch(e){} }
 function hudGuncelle(){ $('#ilerleme').textContent = '⚓ ' + Math.min(adim, DURAKLAR.length) + '/' + DURAKLAR.length; }
 
 /* ===================== HARİTA ===================== */
