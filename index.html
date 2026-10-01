@@ -19,6 +19,7 @@ html,body{margin:0;height:100%;background:#041f2d;overflow:hidden;font-family:'L
 canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 #hud{position:absolute;left:0;right:0;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;
   padding:calc(env(safe-area-inset-top,0px) + 10px) 14px 0;pointer-events:none}
+#sifirla{position:absolute;left:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);z-index:5;background:rgba(243,227,191,.85);border:2px solid var(--altin);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;font-weight:700;color:var(--murekkep);cursor:pointer}
 #hud .rozet{pointer-events:auto;background:rgba(243,227,191,.92);border:2px solid var(--altin);border-radius:999px;padding:5px 12px;font-weight:700;font-size:15px}
 #ses{cursor:pointer}
 #toast{position:absolute;left:50%;top:auto;bottom:110px;transform:translateX(-50%);z-index:9;background:rgba(243,227,191,.97);border:2px solid var(--altin);
@@ -97,6 +98,7 @@ pre.kod{background:#15232b;color:#d6e6ee;padding:12px;border-radius:10px;font:13
 <div id="app">
   <canvas id="mc"></canvas>
   <div id="hud"><div class="rozet" id="ilerleme">⚓ 0/7</div><div class="rozet" id="ses">🔊</div></div>
+  <button id="sifirla" type="button">↺ Sıfırla</button>
   <div id="toast"></div>
   <canvas id="gl"></canvas>
   <div id="gbaslik"></div>
@@ -252,6 +254,11 @@ function darbe(f = 300, d = .12, v = .25, gurultu = .6){   // topa vurma / nal s
     o.connect(g2); g2.connect(AC.destination); o.start(t0); o.stop(t0 + d + .02);
   }catch(e){}
 }
+$('#sifirla').onclick = () => {
+  if (!confirm('Yolculuk baştan başlasın mı?')) return;
+  try { localStorage.removeItem('aysun_adim'); } catch (e) {}
+  location.href = location.pathname + '?sifirla';
+};
 $('#ses').onclick = () => { sesAcik = !sesAcik; $('#ses').textContent = sesAcik ? '🔊' : '🔇'; if (!sesAcik) KEMENCE.dur(); };
 
 let toastT = 0;
